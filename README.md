@@ -1,2 +1,2 @@
 # glih
-Une implémentation de blih écrite en go
+blih, but in go
