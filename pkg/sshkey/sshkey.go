@@ -97,7 +97,7 @@ func Execute(args []string, baseurl, user, token, userAgent string, verbose bool
 }
 
 /*
-	Functions below were take straight from the golang net/url package and simplified for my needs.
+	Functions below were taken straight from the golang net/url package and simplified for my needs.
 	They are originally much more complex and versatile; but they gave different results from the python
 	function quote() from the urllib.parse package, which is the kind of PathUrl quoting I am going for here.
 
