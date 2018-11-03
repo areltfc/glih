@@ -1,2 +1,2 @@
-# glih
-BLIH implementation written in go
+# blihUI
+Une interface terminale pour blih
