@@ -19,8 +19,11 @@ type SSHKey struct {
 
 func Delete(name string, b *blih.BLIH) error {
 	answer, err := b.Request("sshkey/"+name, "DELETE", nil)
+	if err != nil {
+		return err
+	}
 	fmt.Println(answer["message"].(string))
-	return err
+	return nil
 }
 
 func List(b *blih.BLIH) error {
@@ -43,8 +46,11 @@ func Upload(filename string, b *blih.BLIH) error {
 	key := escape(stringFile)
 	d := &data.Data{"sshkey": key}
 	answer, err := b.Request("sshkeys", "POST", d)
+	if err != nil {
+		return err
+	}
 	fmt.Println(answer["message"].(string))
-	return err
+	return nil
 }
 
 func sshkeyUsage() {

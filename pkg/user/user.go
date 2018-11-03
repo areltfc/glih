@@ -11,7 +11,7 @@ import (
 	"syscall"
 )
 
-const prompt = "Mot de passe bocal : "
+const prompt = "Password: "
 
 type User struct {
 	email, token string

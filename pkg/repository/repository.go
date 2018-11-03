@@ -38,14 +38,20 @@ func Create(name, description string, b *blih.BLIH) error {
 		d["description"] = description
 	}
 	answer, err := b.Request("repositories", "POST", &d)
+	if err != nil {
+		return err
+	}
 	fmt.Println(answer["message"].(string))
-	return err
+	return nil
 }
 
 func Delete(name string, b *blih.BLIH) error {
 	answer, err := b.Request("repository/"+name, "DELETE", nil)
+	if err != nil {
+		return err
+	}
 	fmt.Println(answer["message"].(string))
-	return err
+	return nil
 }
 
 func Info(name string, b *blih.BLIH) error {
@@ -64,8 +70,11 @@ func Info(name string, b *blih.BLIH) error {
 func SetACL(name, acluser, acl string, b *blih.BLIH) error {
 	d := data.Data{"user": acluser, "acl": acl}
 	answer, err := b.Request("repository/"+name+"/acls", "POST", &d)
+	if err != nil {
+		return err
+	}
 	fmt.Println(answer["message"].(string))
-	return err
+	return nil
 }
 
 func GetACL(name string, b *blih.BLIH) error {
@@ -74,7 +83,7 @@ func GetACL(name string, b *blih.BLIH) error {
 		return err
 	}
 	for user, acls := range repository {
-		fmt.Printf("%s:%s", user, acls.(string))
+		fmt.Printf("%s:%s\n", user, acls.(string))
 	}
 	return nil
 }
