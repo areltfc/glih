@@ -37,12 +37,14 @@ func Create(name, description string, b *blih.BLIH) error {
 	if description != "" {
 		d["description"] = description
 	}
-	_, err := b.Request("repositories", "POST", &d)
+	answer, err := b.Request("repositories", "POST", &d)
+	fmt.Println(answer["message"].(string))
 	return err
 }
 
 func Delete(name string, b *blih.BLIH) error {
-	_, err := b.Request("repository/"+name, "DELETE", nil)
+	answer, err := b.Request("repository/"+name, "DELETE", nil)
+	fmt.Println(answer["message"].(string))
 	return err
 }
 
@@ -51,16 +53,7 @@ func Info(name string, b *blih.BLIH) error {
 	if err != nil {
 		return err
 	}
-	infos := repository["message"].(map[string]interface{})
-	repo := map[string]string{
-		"name":          name,
-		"uuid":          infos["uuid"].(string),
-		"description":   infos["description"].(string),
-		"url":           infos["url"].(string),
-		"public":        infos["public"].(string),
-		"creation_time": infos["creation_time"].(string),
-	}
-	marshaled, err := json.Marshal(repo)
+	marshaled, err := json.Marshal(repository["message"])
 	if err != nil {
 		return err
 	}
@@ -70,7 +63,8 @@ func Info(name string, b *blih.BLIH) error {
 
 func SetACL(name, acluser, acl string, b *blih.BLIH) error {
 	d := data.Data{"user": acluser, "acl": acl}
-	_, err := b.Request("repository/"+name+"/acls", "POST", &d)
+	answer, err := b.Request("repository/"+name+"/acls", "POST", &d)
+	fmt.Println(answer["message"].(string))
 	return err
 }
 
@@ -80,7 +74,7 @@ func GetACL(name string, b *blih.BLIH) error {
 		return err
 	}
 	for user, acls := range repository {
-		fmt.Printf("%s %s", user, acls.(string))
+		fmt.Printf("%s:%s", user, acls.(string))
 	}
 	return nil
 }
@@ -119,6 +113,12 @@ func Execute(args []string, baseurl, user, token, userAgent string, verbose bool
 		}
 		b := blih.New(baseurl, userAgent, user, token, verbose)
 		err = List(&b)
+	case "info":
+		if argsLen != 2 {
+			repositoryUsage()
+		}
+		b := blih.New(baseurl, userAgent, user, token, verbose)
+		err = Info(args[1], &b)
 	case "delete":
 		if argsLen != 2 {
 			repositoryUsage()
