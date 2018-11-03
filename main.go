@@ -71,7 +71,7 @@ func main() {
 	case "sshkey":
 		err = sshkey.Execute(args[1:], b, u, t, U, *v)
 	case "whoami":
-		err = whoami.Execute(b, u, t, U, *v)
+		err = whoami.Execute(args[1:], b, u, t, U, *v)
 	default:
 		usage()
 		os.Exit(1)

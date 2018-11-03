@@ -93,9 +93,9 @@ func repositoryUsage() {
 	fmt.Fprintf(os.Stderr, "\tlist\t\t\t\t-- List the repositories created\n")
 	fmt.Fprintf(os.Stderr, "\tsetacl repo user [acl]\t\t-- Set (or remove) an acl for \"user\" on \"repo\"\n")
 	fmt.Fprintf(os.Stderr, "\t\t\t\t\tACL format:\n")
-	fmt.Fprintf(os.Stderr, "\t\t\t\t\tr for read\n")
-	fmt.Fprintf(os.Stderr, "\t\t\t\t\tw for write\n")
-	fmt.Fprintf(os.Stderr, "\t\t\t\t\ta for admin\n")
+	fmt.Fprintf(os.Stderr, "\t\t\t\t\t\tr for read\n")
+	fmt.Fprintf(os.Stderr, "\t\t\t\t\t\tw for write\n")
+	fmt.Fprintf(os.Stderr, "\t\t\t\t\t\ta for admin\n")
 	fmt.Fprintf(os.Stderr, "\tgetacl repo\t\t\t-- Get the acls set for the repository\n")
 	os.Exit(1)
 }

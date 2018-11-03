@@ -55,7 +55,7 @@ func (b *BLIH) Request(resource, method string, d *data.Data) (map[string]interf
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		err = errors.New(fmt.Sprintf("%s %s", resp.Status, responseData["error"]))
+		err = errors.New(fmt.Sprintf("%s %s\n", resp.Status, responseData["error"]))
 		return nil, err
 	}
 	return responseData, nil
