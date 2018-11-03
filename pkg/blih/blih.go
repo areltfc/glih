@@ -21,7 +21,8 @@ type BLIH struct {
 	verbose        bool
 }
 
-func New(url string, u *user.User, verbose bool, userAgent string) BLIH {
+func New(url, userAgent, username, token string, verbose bool) BLIH {
+	u := user.New(username, token)
 	return BLIH{user: u, url: url, userAgent: userAgent, verbose: verbose}
 }
 

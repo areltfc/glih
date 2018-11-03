@@ -5,8 +5,8 @@
 package user
 
 import (
-	"glih/pkg/token"
 	"fmt"
+	"glih/pkg/token"
 	"golang.org/x/crypto/ssh/terminal"
 	"syscall"
 )
@@ -17,15 +17,21 @@ type User struct {
 	email, token string
 }
 
-func New(email string) *User {
+func New(email, givenToken string) *User {
 	fmt.Printf(prompt)
 	password, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println()
-	t := token.Token(password)
-	return &User{email: email, token: t.ToSha512()}
+	var t string
+	if givenToken == "" {
+		tok := token.Token(password)
+		t = tok.ToSha512()
+	} else {
+		t = givenToken
+	}
+	return &User{email: email, token: t}
 }
 
 func (u *User) Email() string {
