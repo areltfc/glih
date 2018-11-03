@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/pborman/getopt/v2"
 	"glih/pkg/repository"
+	"glih/pkg/sshkey"
 	"os"
 )
 
@@ -65,9 +66,9 @@ func main() {
 	}
 	switch args[0] {
 	case "repository":
-		err = repository.Execute(args, b, u, t, U, *v)
+		err = repository.Execute(args[1:], b, u, t, U, *v)
 	case "sshkey":
-		usage()
+		err = sshkey.Execute(args[1:], b, u, t, U, *v)
 	case "whoami":
 		usage()
 	default:

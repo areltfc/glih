@@ -125,14 +125,13 @@ func Execute(args []string, baseurl, user, token, userAgent string, verbose bool
 		b := blih.New(baseurl, userAgent, user, token, verbose)
 		err = Delete(args[1], &b)
 	case "setacl":
-		if argsLen < 3 || argsLen > 4 {
-			repositoryUsage()
-		}
 		var acl string
 		if argsLen == 3 {
 			acl = ""
-		} else {
+		} else if argsLen == 4 {
 			acl = args[3]
+		} else {
+			repositoryUsage()
 		}
 		b := blih.New(baseurl, userAgent, user, token, verbose)
 		err = SetACL(args[1], args[2], acl, &b)

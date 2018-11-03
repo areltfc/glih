@@ -5,10 +5,11 @@
 package sshkey
 
 import (
+	"fmt"
 	"glih/pkg/blih"
 	"glih/pkg/data"
-	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -16,25 +17,20 @@ type SSHKey struct {
 	name, key string
 }
 
-func (s SSHKey) String() string {
-	return fmt.Sprintf("%s %s", s.key, s.name)
-}
-
 func Delete(name string, b *blih.BLIH) error {
 	_, err := b.Request("sshkey/"+name, "DELETE", nil)
 	return err
 }
 
-func List(b *blih.BLIH) ([]SSHKey, error) {
+func List(b *blih.BLIH) error {
 	list, err := b.Request("sshkeys", "GET", nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var keys []SSHKey
-	for key, value := range list {
-		keys = append(keys, SSHKey{name: key, key: value.(string)})
+	for comment, key := range list {
+		fmt.Printf("%s %s", comment, key.(string))
 	}
-	return keys, nil
+	return nil
 }
 
 func Upload(filename string, b *blih.BLIH) error {
@@ -49,13 +45,56 @@ func Upload(filename string, b *blih.BLIH) error {
 	return err
 }
 
+func sshkeyUsage() {
+	fmt.Fprintf(os.Stderr, "Usage: %s [options] sshkey command ...\n\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "Commands:\n")
+	fmt.Fprintf(os.Stderr, "\tupload [file]\t\t\t-- Upload a new ssh-key\n")
+	fmt.Fprintf(os.Stderr, "\tlist\t\t\t\t-- List the ssh-keys\n")
+	fmt.Fprintf(os.Stderr, "\tdelete <sshkey>\t\t\t-- Delete the sshkey with comment <sshkey>\n")
+	os.Exit(1)
+}
+
+func Execute(args []string, baseurl, user, token, userAgent string, verbose bool) error {
+	argsLen := len(args)
+	var err error
+	if argsLen == 0 {
+		sshkeyUsage()
+	}
+	switch args[0] {
+	case "list":
+		if argsLen > 1 {
+			sshkeyUsage()
+		}
+		b := blih.New(baseurl, userAgent, user, token, verbose)
+		err = List(&b)
+	case "upload":
+		var key string
+		if argsLen == 1 {
+			key = os.Getenv("HOME") + "/.ssh/id_rsa.pub"
+		} else if argsLen == 2 {
+			key = args[1]
+		} else {
+			sshkeyUsage()
+		}
+		b := blih.New(baseurl, userAgent, user, token, verbose)
+		err = Upload(key, &b)
+	case "delete":
+		if argsLen != 2 {
+			sshkeyUsage()
+		}
+		b := blih.New(baseurl, userAgent, user, token, verbose)
+		err = Delete(args[1], &b)
+	}
+	return err
+}
+
 /*
 	Functions below were take straight from the golang net/url package and simplified for my needs.
 	They are originally much more complex and versatile; but they gave different results from the python
 	function quote() from the urllib.parse package, which is the kind of PathUrl quoting I am going for here.
 
 	It was not my choice to disfigure such beautiful code. I did what had to be done to be compliant with
-	the blih API. I am not proud of any of this and I still weep about it at nights.
+	the blih API. I am not proud of any of this and I still weep at nights.
  */
 
 func shouldEscape(c byte) bool {
