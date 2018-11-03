@@ -1,2 +1,2 @@
 # glih
-Une interface terminale pour blih
+Une implémentation de blih écrite en go
