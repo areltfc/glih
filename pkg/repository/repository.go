@@ -25,8 +25,9 @@ func List(b *blih.BLIH) error {
 	if err != nil {
 		return err
 	}
-	for key := range repositories {
-		fmt.Println(key)
+	list := repositories["repositories"].(map[string]interface{})
+	for repository := range list {
+		fmt.Println(repository)
 	}
 	return nil
 }
