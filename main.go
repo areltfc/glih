@@ -9,6 +9,7 @@ import (
 	"github.com/pborman/getopt/v2"
 	"glih/pkg/repository"
 	"glih/pkg/sshkey"
+	"glih/pkg/whoami"
 	"os"
 )
 
@@ -70,7 +71,7 @@ func main() {
 	case "sshkey":
 		err = sshkey.Execute(args[1:], b, u, t, U, *v)
 	case "whoami":
-		usage()
+		err = whoami.Execute(b, u, t, U, *v)
 	default:
 		usage()
 		os.Exit(1)

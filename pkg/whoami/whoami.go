@@ -5,16 +5,22 @@
 package whoami
 
 import (
+	"fmt"
 	"glih/pkg/blih"
 )
 
 type User string
 
-func WhoAmI(b *blih.BLIH) (User, error) {
+func WhoAmI(b *blih.BLIH) error {
 	identity, err := b.Request("whoami", "GET", nil)
 	if err != nil {
-		return "", err
+		return err
 	}
-	user := identity["message"].(string)
-	return User(user), nil
+	fmt.Println(identity["message"].(string))
+	return nil
+}
+
+func Execute(baseurl, user, token, userAgent string, verbose bool) error {
+	b := blih.New(baseurl, userAgent, user, token, verbose)
+	return WhoAmI(&b)
 }
