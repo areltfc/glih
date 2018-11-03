@@ -28,7 +28,7 @@ func List(b *blih.BLIH) error {
 		return err
 	}
 	for comment, key := range list {
-		fmt.Printf("%s %s", comment, key.(string))
+		fmt.Printf("%s %s\n", key.(string), comment)
 	}
 	return nil
 }
