@@ -1,12 +1,12 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package main
 
 import (
-	"blihUI/pkg/blih"
-	"blihUI/pkg/user"
+	"glih/pkg/blih"
+	"glih/pkg/user"
 )
 
 const (

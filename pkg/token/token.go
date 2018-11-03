@@ -1,5 +1,5 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package token

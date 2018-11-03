@@ -1,11 +1,11 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package whoami
 
 import (
-	"blihUI/pkg/blih"
+	"glih/pkg/blih"
 )
 
 type User string

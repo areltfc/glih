@@ -1,11 +1,11 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package user
 
 import (
-	"blihUI/pkg/token"
+	"glih/pkg/token"
 	"fmt"
 	"golang.org/x/crypto/ssh/terminal"
 	"syscall"

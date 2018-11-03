@@ -1,15 +1,15 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package data
 
 import (
-	"blihUI/pkg/user"
 	"crypto/hmac"
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
+	"glih/pkg/user"
 )
 
 type Data map[string]interface{}

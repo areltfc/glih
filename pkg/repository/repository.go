@@ -1,15 +1,14 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package repository
 
 import (
-	"blihUI/pkg/blih"
-	"blihUI/pkg/data"
-	"errors"
+	"encoding/json"
 	"fmt"
-	"strconv"
+	"glih/pkg/blih"
+	"glih/pkg/data"
 	"time"
 )
 
@@ -33,32 +32,18 @@ func (r *Repository) URL() string {
 }
 
 func (r Repository) String() string {
-	var description string
-	if r.description != "" {
-		description = r.description
-	} else {
-		description = "(none)"
-	}
-	return fmt.Sprintf("%s (UUID: %s, description: %s, public: %v, url: %s, creation: %s)",
-		r.name, r.uuid, description, r.public, r.url, r.creation)
+	return fmt.Sprintf("%s", r.name)
 }
 
-func List(b *blih.BLIH) ([]Repository, error) {
+func List(b *blih.BLIH) error {
 	repositories, err := b.Request("repositories", "GET", nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	list, ok := repositories["repositories"].(map[string]interface{})
-	if ok != true {
-		err = errors.New("could not convert repositories to map[string]interface{}")
-		return nil, err
+	for key := range repositories {
+		fmt.Println(key)
 	}
-	var repos []Repository
-	for key := range list {
-		repo := Repository{name: key}
-		repos = append(repos, repo)
-	}
-	return repos, nil
+	return nil
 }
 
 func Create(name, description string, b *blih.BLIH) error {
@@ -75,37 +60,26 @@ func Delete(name string, b *blih.BLIH) error {
 	return err
 }
 
-func Info(name string, b *blih.BLIH) (*Repository, error) {
+func Info(name string, b *blih.BLIH) error {
 	repository, err := b.Request("repository/"+name, "GET", nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	infos, ok := repository["message"].(map[string]interface{})
-	if ok != true {
-		err := errors.New(fmt.Sprintf("could not convert infos of %s to map[string]interface{}", name))
-		return nil, err
+	infos := repository["message"].(map[string]interface{})
+	repo := map[string]string{
+		"name":          name,
+		"uuid":          infos["uuid"].(string),
+		"description":   infos["description"].(string),
+		"url":           infos["url"].(string),
+		"public":        infos["public"].(string),
+		"creation_time": infos["creation_time"].(string),
 	}
-	repo := &Repository{
-		name:        name,
-		uuid:        infos["uuid"].(string),
-		description: infos["description"].(string),
-		url:         infos["url"].(string),
-	}
-	if repo.description == "None" {
-		repo.description = ""
-	}
-	repo.public, err = strconv.ParseBool(infos["public"].(string))
+	marshaled, err := json.Marshal(repo)
 	if err != nil {
-		err = errors.New(fmt.Sprintf("could not convert infos[\"public\"] of %s to bool: %s", name, err))
-		return nil, err
+		return err
 	}
-	timestamp, err := strconv.ParseInt(infos["creation_time"].(string), 10, 64)
-	if err != nil {
-		err = errors.New(fmt.Sprintf("could not convert infos[\"creation_time\"] of %s to int: %s", name, err))
-		return nil, err
-	}
-	repo.creation = time.Unix(timestamp, 0)
-	return repo, err
+	fmt.Println(string(marshaled))
+	return nil
 }
 
 func SetACL(name, acluser, acl string, b *blih.BLIH) error {
@@ -114,14 +88,13 @@ func SetACL(name, acluser, acl string, b *blih.BLIH) error {
 	return err
 }
 
-func GetACL(name string, b *blih.BLIH) (map[string]string, error) {
+func GetACL(name string, b *blih.BLIH) error {
 	repository, err := b.Request("repository/"+name+"/acls", "GET", nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	acls := make(map[string]string)
-	for key, value := range repository {
-		acls[key] = value.(string)
+	for user, acls := range repository {
+		fmt.Printf("%s %s", user, acls.(string))
 	}
-	return acls, err
+	return nil
 }

@@ -1,16 +1,16 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package blih
 
 import (
-	"blihUI/pkg/data"
-	"blihUI/pkg/user"
 	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"glih/pkg/data"
+	"glih/pkg/user"
 	"io/ioutil"
 	"net/http"
 )
@@ -50,10 +50,11 @@ func (b *BLIH) Request(resource, method string, d *data.Data) (map[string]interf
 	var responseData map[string]interface{}
 	err = json.Unmarshal(body, &responseData)
 	if err != nil {
+		err = errors.New("Can't decode data, aborting")
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		err = errors.New(fmt.Sprintf("response code is not 200 OK but %s (%s)", resp.Status, responseData["error"]))
+		err = errors.New(fmt.Sprintf("%s %s", resp.Status, responseData["error"]))
 		return nil, err
 	}
 	return responseData, nil

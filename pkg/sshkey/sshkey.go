@@ -1,12 +1,12 @@
 // Go project by arthur
-// blihUI
+// glih
 // 2018
 
 package sshkey
 
 import (
-	"blihUI/pkg/blih"
-	"blihUI/pkg/data"
+	"glih/pkg/blih"
+	"glih/pkg/data"
 	"fmt"
 	"io/ioutil"
 	"strings"
