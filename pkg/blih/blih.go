@@ -18,12 +18,11 @@ import (
 type BLIH struct {
 	user           *user.User
 	url, userAgent string
-	verbose        bool
 }
 
-func New(url, userAgent, username, token string, verbose bool) BLIH {
+func New(url, userAgent, username, token string) BLIH {
 	u := user.New(username, token)
-	return BLIH{user: u, url: url, userAgent: userAgent, verbose: verbose}
+	return BLIH{user: u, url: url, userAgent: userAgent}
 }
 
 func (b *BLIH) Request(resource, method string, d *data.Data) (map[string]interface{}, error) {

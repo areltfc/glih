@@ -103,7 +103,7 @@ func repositoryUsage() {
 	os.Exit(1)
 }
 
-func Execute(args []string, baseURL, user, token, userAgent string, verbose bool) error {
+func Execute(args []string, baseURL, user, token, userAgent string) error {
 	argsLen := len(args)
 	var err error
 	if argsLen == 0 {
@@ -114,25 +114,25 @@ func Execute(args []string, baseURL, user, token, userAgent string, verbose bool
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = Create(args[1], "", &b)
 	case "list":
 		if argsLen != 1 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = List(&b)
 	case "info":
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = Info(args[1], &b)
 	case "delete":
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = Delete(args[1], &b)
 	case "setacl":
 		var acl string
@@ -143,13 +143,13 @@ func Execute(args []string, baseURL, user, token, userAgent string, verbose bool
 		} else {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = SetACL(args[1], args[2], acl, &b)
 	case "getacl":
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = GetACL(args[1], &b)
 	default:
 		repositoryUsage()

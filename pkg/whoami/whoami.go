@@ -21,11 +21,11 @@ func WhoAmI(b *blih.BLIH) error {
 	return nil
 }
 
-func Execute(args []string, baseURL, user, token, userAgent string, verbose bool) error {
+func Execute(args []string, baseURL, user, token, userAgent string) error {
 	if len(args) != 0 {
 		fmt.Fprintf(os.Stderr, "Too many arguments for command 'whoami'\n")
 		os.Exit(1)
 	}
-	b := blih.New(baseURL, userAgent, user, token, verbose)
+	b := blih.New(baseURL, userAgent, user, token)
 	return WhoAmI(&b)
 }

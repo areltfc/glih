@@ -14,13 +14,12 @@ import (
 )
 
 const (
-	version       = "1.7"
+	version       = "1.0"
 	baseURL       = "https://blih.epitech.eu/"
 	baseUserAgent = "blih-" + version
 )
 
 var (
-	v    = getopt.BoolLong("verbose", 'v', "")
 	V    = getopt.BoolLong("version", 'V', "")
 	u, t string
 	U    = baseUserAgent
@@ -31,7 +30,6 @@ func usage() {
 	fmt.Printf("Usage: %s [options] command ...\n\n", os.Args[0])
 	fmt.Printf("Global Options: \n")
 	fmt.Printf("\t-u user\t| --user=user\t\t-- Run as user\n")
-	fmt.Printf("\t-v\t| --verbose\t\t-- Verbose\n")
 	fmt.Printf("\t-b url\t| --baseurl=url\t\t-- Base URL for BLIH\n")
 	fmt.Printf("\t-t\t| --token\t\t-- Specify token in the cmdline\n")
 	fmt.Printf("\t-V\t| --version\t\t-- Print this binary's version then exit\n")
@@ -67,11 +65,11 @@ func main() {
 	}
 	switch args[0] {
 	case "repository":
-		err = repository.Execute(args[1:], b, u, t, U, *v)
+		err = repository.Execute(args[1:], b, u, t, U)
 	case "sshkey":
-		err = sshkey.Execute(args[1:], b, u, t, U, *v)
+		err = sshkey.Execute(args[1:], b, u, t, U)
 	case "whoami":
-		err = whoami.Execute(args[1:], b, u, t, U, *v)
+		err = whoami.Execute(args[1:], b, u, t, U)
 	default:
 		usage()
 		os.Exit(1)

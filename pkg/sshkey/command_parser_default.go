@@ -17,7 +17,7 @@ func sshkeyUsage() {
 	os.Exit(1)
 }
 
-func Execute(args []string, baseURL, user, token, userAgent string, verbose bool) error {
+func Execute(args []string, baseURL, user, token, userAgent string) error {
 	argsLen := len(args)
 	var err error
 	if argsLen == 0 {
@@ -28,7 +28,7 @@ func Execute(args []string, baseURL, user, token, userAgent string, verbose bool
 		if argsLen > 1 {
 			sshkeyUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = List(&b)
 	case "upload":
 		var key string
@@ -39,13 +39,13 @@ func Execute(args []string, baseURL, user, token, userAgent string, verbose bool
 		} else {
 			sshkeyUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = Upload(key, &b)
 	case "delete":
 		if argsLen != 2 {
 			sshkeyUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token, verbose)
+		b := blih.New(baseURL, userAgent, user, token)
 		err = Delete(args[1], &b)
 	}
 	return err
