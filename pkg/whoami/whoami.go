@@ -27,5 +27,5 @@ func Execute(args []string, baseURL, user, token, userAgent string) error {
 		os.Exit(1)
 	}
 	b := blih.New(baseURL, userAgent, user, token)
-	return WhoAmI(&b)
+	return WhoAmI(b)
 }

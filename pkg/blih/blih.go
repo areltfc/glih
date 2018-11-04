@@ -20,21 +20,16 @@ type BLIH struct {
 	url, userAgent string
 }
 
-func New(url, userAgent, username, token string) BLIH {
-	u := user.New(username, token)
-	return BLIH{user: u, url: url, userAgent: userAgent}
+func New(url, userAgent, email, token string) *BLIH {
+	return &BLIH{user: user.New(email, token), url: url, userAgent: userAgent}
 }
 
 func (b *BLIH) Request(resource, method string, d *data.Data) (map[string]interface{}, error) {
-	signed, err := data.Sign(b.user, d)
+	signed, err := data.TreatForHTTPRequest(b.user, d)
 	if err != nil {
 		return nil, err
 	}
-	marshaled, err := json.Marshal(signed)
-	if err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest(method, b.url+resource, bytes.NewBuffer(marshaled))
+	req, err := http.NewRequest(method, b.url+resource, bytes.NewBuffer(signed))
 	if err != nil {
 		return nil, err
 	}

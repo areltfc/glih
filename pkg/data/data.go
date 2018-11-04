@@ -14,7 +14,7 @@ import (
 
 type Data map[string]interface{}
 
-func Sign(u *user.User, data *Data) (Data, error) {
+func sign(u *user.User, data *Data) (Data, error) {
 	mac := hmac.New(sha512.New, []byte(u.Token()))
 	update := []byte(u.Email())
 	if data != nil {
@@ -31,4 +31,19 @@ func Sign(u *user.User, data *Data) (Data, error) {
 		signed["data"] = data
 	}
 	return signed, nil
+}
+
+func TreatForHTTPRequest(u *user.User, d *Data) ([]byte, error) {
+	if u.Token() == "" {
+		u.CalculateToken()
+	}
+	signed, err := sign(u, d)
+	if err != nil {
+		return nil, err
+	}
+	marshaled, err := json.Marshal(signed)
+	if err != nil {
+		return nil, err
+	}
+	return marshaled, nil
 }

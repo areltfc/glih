@@ -94,7 +94,7 @@ func repositoryUsage() {
 	fmt.Fprintf(os.Stderr, "\tcreate <repo>\t\t\t-- Create a repository of name <repo>\n")
 	fmt.Fprintf(os.Stderr, "\tinfo <repo>\t\t\t-- Fetch the metadata of repository <repo>\n")
 	fmt.Fprintf(os.Stderr, "\tlist\t\t\t\t-- List the repositories created\n")
-	fmt.Fprintf(os.Stderr, "\tsetacl <repo> <user> [acl]\t\t-- Set (or remove) an acl for <user> on <repo>\n")
+	fmt.Fprintf(os.Stderr, "\tsetacl <repo> <user> [acl]\t-- Set (or remove) the acls for <user> on <repo>\n")
 	fmt.Fprintf(os.Stderr, "\t\t\t\t\tACL format:\n")
 	fmt.Fprintf(os.Stderr, "\t\t\t\t\t\tr for read\n")
 	fmt.Fprintf(os.Stderr, "\t\t\t\t\t\tw for write\n")
@@ -109,31 +109,28 @@ func Execute(args []string, baseURL, user, token, userAgent string) error {
 	if argsLen == 0 {
 		repositoryUsage()
 	}
+	b := blih.New(baseURL, userAgent, user, token)
 	switch args[0] {
 	case "create":
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token)
-		err = Create(args[1], "", &b)
+		err = Create(args[1], "", b)
 	case "list":
 		if argsLen != 1 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token)
-		err = List(&b)
+		err = List(b)
 	case "info":
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token)
-		err = Info(args[1], &b)
+		err = Info(args[1], b)
 	case "delete":
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token)
-		err = Delete(args[1], &b)
+		err = Delete(args[1], b)
 	case "setacl":
 		var acl string
 		if argsLen == 3 {
@@ -143,14 +140,12 @@ func Execute(args []string, baseURL, user, token, userAgent string) error {
 		} else {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token)
-		err = SetACL(args[1], args[2], acl, &b)
+		err = SetACL(args[1], args[2], acl, b)
 	case "getacl":
 		if argsLen != 2 {
 			repositoryUsage()
 		}
-		b := blih.New(baseURL, userAgent, user, token)
-		err = GetACL(args[1], &b)
+		err = GetACL(args[1], b)
 	default:
 		repositoryUsage()
 	}

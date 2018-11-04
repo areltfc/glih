@@ -5,9 +5,11 @@
 package user
 
 import (
+	"crypto/sha512"
+	"encoding/hex"
 	"fmt"
-	"glih/pkg/token"
 	"golang.org/x/crypto/ssh/terminal"
+	"os"
 	"syscall"
 )
 
@@ -18,20 +20,7 @@ type User struct {
 }
 
 func New(email, givenToken string) *User {
-	fmt.Printf(prompt)
-	password, err := terminal.ReadPassword(int(syscall.Stdin))
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println()
-	var t string
-	if givenToken == "" {
-		tok := token.Token(password)
-		t = tok.ToSha512()
-	} else {
-		t = givenToken
-	}
-	return &User{email: email, token: t}
+	return &User{email: email, token: givenToken}
 }
 
 func (u *User) Email() string {
@@ -40,4 +29,16 @@ func (u *User) Email() string {
 
 func (u *User) Token() string {
 	return u.token
+}
+
+func (u *User) CalculateToken() {
+	fmt.Fprintf(os.Stderr, prompt)
+	password, err := terminal.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Fprintln(os.Stderr)
+	hasher := sha512.New()
+	hasher.Write(password)
+	u.token = hex.EncodeToString(hasher.Sum(nil))
 }
