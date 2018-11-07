@@ -45,6 +45,8 @@ func Execute(args []string, baseURL, user, token, userAgent string) error {
 			sshkeyUsage()
 		}
 		err = Delete(args[1], b)
+	default:
+		sshkeyUsage()
 	}
 	return err
 }
